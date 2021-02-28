@@ -14,10 +14,10 @@ conn = 'mongodb://localhost:27017'
 client = pymongo.MongoClient(conn)
 
 # Connect to a database. Will create one if not already available.
-db = client.mars_db
+mydb = client.marsDB
 
 # Drops collection if available to remove duplicates
-db.mars.drop()
+mydb.db.drop()
 
 # Creates a collection in the database and inserts two documents
 
@@ -26,7 +26,7 @@ db.mars.drop()
 # Set route
 @app.route("/")
 def home():
-    marsData = mongo.db.collection.find_one()
+    marsData = mydb.collection.find_one()
     print(marsData)
     return render_template("index.html", Mars_Info=marsData)
 
@@ -35,9 +35,9 @@ def home():
 @app.route('/scrape')
 
 def scrape():
-    marsData = mars_scrape.scrape_info()
-    print("this one", marsData)
-    mongo.db.collection.update({}, marsData, upsert=True)
+    marsData = scrapemars.scrape_info
+    print("test", marsData)
+    mydb.collection.update({}, marsData, upsert=True)
     return redirect ("/")
 
 

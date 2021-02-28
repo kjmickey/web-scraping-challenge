@@ -43,10 +43,6 @@ def getMarsNews(url):
     soupTeaser = soup.find(class_="article_teaser_body")
     newsPara = soupTeaser.get_text().strip()
 
-    # These are used in mongo part
-    # print("\n")
-    # print(newsTitle)
-    # print(newsPara)
     newsDict = {'title': newsTitle, 'teaser' : newsPara}
     return newsTitle, newsPara
 
@@ -123,43 +119,27 @@ def getMarsHemiURLs(url):
         browser.back()
     return(hemisphereImageURLs)
 
-# marsNews is the result for step 1
-marsHeadline, marsTeaser = getMarsNews(marsNewsURL)
-# print('\n')
-# print(marsHeadline)
-# print(marsNews.values())
+def marsScrape():
+    # marsNews is the result for step 1
+    marsHeadline, marsTeaser = getMarsNews(marsNewsURL)
 
-# # ------
-# # # imageOTDDict is the Dictionary result of step 2
-# # This is where the function gets called
-imageOTDDict = getMarsImageOTD()
-# print('\n')
-# print(f'Image of the Day Dict = {imageOTDDict}')
-# # ------
+    # # # imageOTDDict is the Dictionary result of step 2
+    # # This is where the function gets called
+    imageOTDDict = getMarsImageOTD()
 
 
-# # table1 and table2 are the dataframes from step 3
+    # # table1 and table2 are the dataframes from step 3
 
-table1, table2 = marsFacts(marsProfileURL)
-# print(table1)
-# print('\n')
-# print(table2)
-htmlTable1 = table1.to_html(index=False)
-htmlTable2 = table2.to_html(index=False)
-# print('\n')
-# print(htmlTable2)
+    table1, table2 = marsFacts(marsProfileURL)
+    htmlTable1 = table1.to_html(index=False)
+    htmlTable2 = table2.to_html(index=False)
 
+    hemiURLs = getMarsHemiURLs(marsHemisphereURL)        
+    marsData = {"Title" : marsHeadline, "Teaser" : marsTeaser, "Image" : imageOTDDict, "Table 1 DF" : table1, "Table 2 DF" : table2, "Table 1 HTML" : htmlTable1, "Table 2 HTML" : htmlTable2, "Hemispheres" : hemiURLs}
+    return marsData
 
-# # hemiURLs are the dictionary items for the hi rez photos of mars
-hemiURLs = getMarsHemiURLs(marsHemisphereURL)        
-# print('\n')
-# print(hemiURLs)
-
-
-
-
+scrape_info = marsScrape()
 browser.quit()
 
-marsData = {"Title" : marsHeadline, "Teaser" : marsTeaser, "Image" : imageOTDDict, "Table 1 DF" : table1, "Table 2 DF" : table2, "Table 1 HTML" : htmlTable1, "Table 2 HTML" : htmlTable2, "Hemispheres" : hemiURLs}
 
-print(marsData)
+print(scrape_info)

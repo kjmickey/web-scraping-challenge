@@ -11,9 +11,11 @@
 
 <body>
   <div class="container text-center">
-    <h1 class="jumbotron">Basketball Players</h1>
+    <h1 class="banner">Mars Facts (and Fictions?)</h1>
     <div>
+    {{title}}
       <ul style="list-style: none;">
+     	 li>{{ "Title" }}: {{ marsHeadLine }}</li>
         {% for team in teams %}
           <li>{{ team.player }}: {{ team.position }}</li>
         {% endfor %}
