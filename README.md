@@ -18,7 +18,7 @@ Part 2
 
 I was unable to get /scrape to work correctly and as a result never got to the actual html.  
 
-I do know that scrapemars.py works, and app.py works enough that clicking refresh on http://127.0.0.1:5000/ triggers the following in the console
+I do know that `scrapemars.py` works, and `app.py` works enough that clicking refresh on http://127.0.0.1:5000/ triggers the following in the console
 
 ```
 127.0.0.1 - - [27/Feb/2021 22:59:27] "GET /scrape?__debugger__=yes&cmd=resource&f=style.css HTTP/1.1" 200 -
