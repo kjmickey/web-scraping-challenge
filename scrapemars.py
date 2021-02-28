@@ -14,8 +14,16 @@ browser = Browser('chrome', **executable_path, headless=False)
 # URLs of pages to be scraped
 # Mars News URL
 marsNewsURL = 'https://mars.nasa.gov/news/'
+
 # Mars Facts URL
 marsProfileURL = 'https://space-facts.com/mars/'
+
+# Image of the day
+# I needed 2 URLS and couldn't figure out how to pass them to the function
+# so I hardcoded them inside  ¯\_(ツ)_/¯
+# imageURL = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/index.html'
+# imageBaseURL = 'https://data-class-jpl-space.s3.amazonaws.com/JPL_Space/'
+
 # Mars Hemisphere URL
 marsHemisphereURL = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+enhanced&k1=target&v1=Mars'
 
@@ -24,7 +32,6 @@ marsHemisphereURL = 'https://astrogeology.usgs.gov/search/results?q=hemisphere+e
 # Scrape the first news story (title and teaser) from https://mars.nasa.gov/news/
 def getMarsNews(url):
 
-    newsDict = {}
     browser.visit(url)
     newsHTML = browser.html
     soup = bs(newsHTML, 'html.parser')
@@ -41,7 +48,7 @@ def getMarsNews(url):
     # print(newsTitle)
     # print(newsPara)
     newsDict = {'title': newsTitle, 'teaser' : newsPara}
-    return newsDict
+    return newsTitle, newsPara
 
 
 # Part 2  
@@ -83,7 +90,7 @@ def marsFacts(url):
     # 3 tables, but table 1 and 3 are identical
 
     df0 = marsProfileTables[0]
-    df0.columns  =["Mars Facts",""]  # gets rid of 0 and 1 in header
+    df0.columns  =["Mars Characteristics",""]  # gets rid of 0 and 1 in header
 
     df1 = marsProfileTables[1]
     return df0, df1
@@ -95,8 +102,6 @@ def marsFacts(url):
 def getMarsHemiURLs(url):
     browser.visit(url)
 
-    marsHemisphereHtml = browser.html
-    marsHemisphereSoup = bs(marsHemisphereHtml, 'html.parser')
 
     hemisphereImageURLs = []
     foundLinks = browser.find_by_css('a.product-item h3')
@@ -111,7 +116,7 @@ def getMarsHemiURLs(url):
         hemisphere["img_url"] = sampleTag["href"]
     
         # Get Hemisphere Title
-        hemisphere["title"] = browser.find_by_css("h2.title").text
+        hemisphere["title2"] = browser.find_by_css("h2.title").text
     
         # Append Hemisphere Object to List
         hemisphereImageURLs.append(hemisphere)
@@ -119,29 +124,42 @@ def getMarsHemiURLs(url):
     return(hemisphereImageURLs)
 
 # marsNews is the result for step 1
-marsNews = getMarsNews(marsNewsURL)
-print(f'NewsDict = {marsNews}')
-print(marsNews.values())
+marsHeadline, marsTeaser = getMarsNews(marsNewsURL)
+# print('\n')
+# print(marsHeadline)
+# print(marsNews.values())
 
-# ------
-# # imageOTDDict is the Dictionary result of step 2
-# This is where the function gets called
+# # ------
+# # # imageOTDDict is the Dictionary result of step 2
+# # This is where the function gets called
 imageOTDDict = getMarsImageOTD()
-print(f'Image of the Day Dict = {imageOTDDict}')
-# ------
+# print('\n')
+# print(f'Image of the Day Dict = {imageOTDDict}')
+# # ------
 
 
-# table1 and table2 are the dataframes from step 3
+# # table1 and table2 are the dataframes from step 3
 
 table1, table2 = marsFacts(marsProfileURL)
-print(table1)
-print('\n')
-print(table2)
+# print(table1)
+# print('\n')
+# print(table2)
 htmlTable1 = table1.to_html(index=False)
 htmlTable2 = table2.to_html(index=False)
+# print('\n')
+# print(htmlTable2)
 
 
-
-# hemiURLs are the dictionary items for the hi rez photos of mars
+# # hemiURLs are the dictionary items for the hi rez photos of mars
 hemiURLs = getMarsHemiURLs(marsHemisphereURL)        
-print(hemiURLs)
+# print('\n')
+# print(hemiURLs)
+
+
+
+
+browser.quit()
+
+marsData = {"Title" : marsHeadline, "Teaser" : marsTeaser, "Image" : imageOTDDict, "Table 1 DF" : table1, "Table 2 DF" : table2, "Table 1 HTML" : htmlTable1, "Table 2 HTML" : htmlTable2, "Hemispheres" : hemiURLs}
+
+print(marsData)

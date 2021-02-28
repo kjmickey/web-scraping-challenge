@@ -29,7 +29,7 @@ def getMarsHemiURLs(url):
     for item in range(len(foundLinks)):
         hemisphere = {}
     
-        # Find Element on Each Loop to Avoid a Stale Element Exception
+        # Find Element
         browser.find_by_css("a.product-item h3")[item].click()
     
         # Find Sample Image Anchor Tag & Extract <href>
@@ -41,12 +41,17 @@ def getMarsHemiURLs(url):
     
         # Append Hemisphere Object to List
         hemisphereImageURLs.append(hemisphere)
-        #  print(hemisphereImageURLs)
-        # print(hemisphereImageURLs[item].get('title'))
-        # print(hemisphereImageURLs[item].get('img_url'))
-        # Navigate Backwards
+
         browser.back()
     return(hemisphereImageURLs)
 
-hemiURLs = getMarsHemiURLs(marsHemisphereURL)        
-print(hemiURLs)
+
+
+def scrape():
+    bigDict = []
+    hemiURLs = getMarsHemiURLs(marsHemisphereURL)        
+    # print(hemiURLs)
+    return(hemiURLs)
+
+bigDict = scrape()
+print(f'\ntada! {bigDict}\n')
